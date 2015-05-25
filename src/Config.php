@@ -3,8 +3,9 @@
 namespace GibbonCms\Config;
 
 use GibbonCms\Gibbon\Filesystems\PlainFilesystem;
+use GibbonCms\Gibbon\Modules\Module;
 
-class Config
+class Config implements Module
 {
     /**
      * @var \GibbonCms\Config\ConfigRepository
@@ -28,5 +29,13 @@ class Config
     public function get($id)
     {
         return $this->repository->find($id);
+    }
+
+    /**
+     * @return void
+     */
+    public function setUp()
+    {
+        return;
     }
 }

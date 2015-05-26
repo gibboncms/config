@@ -1,6 +1,6 @@
 <?php
 
-namespace GibbonCms\Config\Tests;
+namespace GibbonCms\Config\Test;
 
 use GibbonCms\Config\Config;
 

@@ -18,7 +18,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "GibbonCms\\Config\\Tests\\": "tests/" 
+            "GibbonCms\\Config\\Test\\": "tests/" 
         }
     },
     "require": {

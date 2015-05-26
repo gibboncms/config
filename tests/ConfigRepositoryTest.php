@@ -4,14 +4,18 @@ namespace GibbonCms\Config\Test;
 
 use GibbonCms\Config\ConfigRepository;
 use GibbonCms\Gibbon\Filesystems\PlainFilesystem;
+use GibbonCms\Gibbon\Filesystems\FileCache;
 
 class ConfigRepositoryTest extends TestCase
 {
     function setUp()
     {
         $this->configRepository = new ConfigRepository(
-            new PlainFilesystem($this->fixtures . '/settings')
+            new PlainFilesystem($this->fixtures . '/settings'),
+            new FileCache($this->fixtures . '/settings/.cache')
         );
+
+        $this->configRepository->build();
     }
 
     /** @test */

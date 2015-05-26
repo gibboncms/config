@@ -2,6 +2,7 @@
 
 namespace GibbonCms\Config;
 
+use GibbonCms\Gibbon\Filesystems\Cache;
 use GibbonCms\Gibbon\Filesystems\Filesystem;
 use GibbonCms\Gibbon\Repositories\Repository;
 use Illuminate\Support\Arr;
@@ -17,25 +18,38 @@ class ConfigRepository implements Repository
     protected $filesystem;
 
     /**
+     * We're using a cache because file io is slow
+     * 
+     * @var \GibbonCms\Gibbon\Filesystems\Cache
+     */
+    protected $cache;
+
+    /**
      * In memory cache containing the values
+     * 
+     * @var array
      */
     protected $values;
 
     /**
-     * @param \GibbonCms\Gibbon\Interfaces\Filesystem $filesystem
+     * @param  \GibbonCms\Gibbon\Filesystems\Filesystem $filesystem
+     * @param  \GibbonCms\Gibbon\Filesystems\Cache $cache
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, Cache $cache)
     {
         $this->filesystem = $filesystem;
-        $this->yaml = new Yaml;
 
-        $this->build();
+        $this->cache = $cache;
+        $this->cache->rebuild();
+        $this->values = $this->cache->all();
+
+        $this->yaml = new Yaml;
     }
 
     /**
      * Find an entity by key (supports dot notation and defaults)
      *
-     * @param string|null $key
+     * @param  string|null $key
      * @return mixed
      */
     public function find($key = null)
@@ -56,11 +70,10 @@ class ConfigRepository implements Repository
     /**
      * Set an array item to a given value using "dot" notation.
      * If no key is given to the method, the entire array will be replaced.
+     * This method does NOT persist to the filesystem and does NOT persist to the cache
      * 
-     * Source: https://github.com/illuminate/support/blob/master/Arr.php
-     *
-     * @param string $key
-     * @param mixed $value
+     * @param  string $key
+     * @param  mixed $value
      * @return array
      */
     public function set($key, $value)
@@ -69,22 +82,24 @@ class ConfigRepository implements Repository
     }
 
     /**
-     * Parse the config files and save the values in memory
+     * Parse the config files and save the values in the cache and in memory
      * 
      * @return void
      */
-    protected function build()
+    public function build()
     {
         $files = $this->filesystem->listFiles();
 
-        $values = [];
+        $this->cache->clear();
 
         foreach ($files as $file) {
             if ($file['extension'] == 'yml' || $file['extension'] == 'yaml') {
-                $values[$file['filename']] = $this->yaml->parse($this->filesystem->read($file['path']));
+                $this->cache->put($file['filename'], $this->yaml->parse($this->filesystem->read($file['path'])));
             }
         }
 
-        $this->values = $values;
+        $this->cache->persist();
+        
+        $this->values = $this->cache->all();
     }
 }

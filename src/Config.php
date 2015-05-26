@@ -2,7 +2,8 @@
 
 namespace GibbonCms\Config;
 
-use GibbonCms\Gibbon\Filesystems\PlainFilesystem;
+use GibbonCms\Gibbon\Filesystems\FileCache;
+use GibbonCms\Gibbon\Filesystems\Filesystem;
 use GibbonCms\Gibbon\Modules\Module;
 
 class Config implements Module
@@ -13,13 +14,12 @@ class Config implements Module
     protected $repository;
 
     /**
-     * @param string $directory
+     * @param  \GibbonCms\Gibbon\Filesystems\Filesystem $filesystem
+     * @param  \GibbonCms\Gibbon\Filesystems\FileCache $fileCache
      */
-    public function __construct($directory)
+    public function __construct(Filesystem $filesystem, FileCache $fileCache)
     {
-        $this->repository = new ConfigRepository(
-            new PlainFilesystem($directory)
-        );
+        $this->repository = new ConfigRepository($filesystem, $fileCache);
     }
 
     /**
@@ -36,6 +36,6 @@ class Config implements Module
      */
     public function setUp()
     {
-        return;
+        $this->repository->build();
     }
 }

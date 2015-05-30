@@ -25,13 +25,6 @@ class ConfigRepository implements Repository
     protected $cache;
 
     /**
-     * In memory cache containing the values
-     * 
-     * @var array
-     */
-    protected $values;
-
-    /**
      * @param  \GibbonCms\Gibbon\Filesystems\Filesystem $filesystem
      * @param  \GibbonCms\Gibbon\Filesystems\Cache $cache
      */
@@ -41,7 +34,6 @@ class ConfigRepository implements Repository
 
         $this->cache = $cache;
         $this->cache->rebuild();
-        $this->values = $this->cache->all();
 
         $this->yaml = new Yaml;
     }
@@ -54,7 +46,7 @@ class ConfigRepository implements Repository
      */
     public function find($key = null)
     {
-        return Arr::get($this->values, $key);
+        return Arr::get($this->cache->all(), $key);
     }
 
     /**
@@ -78,7 +70,7 @@ class ConfigRepository implements Repository
      */
     public function set($key, $value)
     {
-        return Arr::set($this->values, $key, $value);
+        return Arr::set($this->cache->all(), $key, $value);
     }
 
     /**
@@ -99,7 +91,5 @@ class ConfigRepository implements Repository
         }
 
         $this->cache->persist();
-        
-        $this->values = $this->cache->all();
     }
 }

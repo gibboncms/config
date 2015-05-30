@@ -6,7 +6,7 @@ use GibbonCms\Gibbon\Filesystems\Cache;
 use GibbonCms\Gibbon\Filesystems\Filesystem;
 use GibbonCms\Gibbon\Repositories\Repository;
 use Illuminate\Support\Arr;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser as Yaml;
 
 class ConfigRepository implements Repository
 {

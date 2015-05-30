@@ -11,7 +11,8 @@ class ConfigRepositoryTest extends TestCase
     function setUp()
     {
         $this->configRepository = new ConfigRepository(
-            new PlainFilesystem($this->fixtures . '/settings'),
+            new PlainFilesystem($this->fixtures),
+            'settings',
             new FileCache($this->fixtures . '/settings/.cache')
         );
 

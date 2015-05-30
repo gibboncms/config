@@ -11,7 +11,8 @@ class ConfigTest extends TestCase
     function setUp()
     {
         $this->config = new Config(
-            new PlainFilesystem($this->fixtures.'/settings'),
+            new PlainFilesystem($this->fixtures),
+            'settings',
             new FileCache($this->fixtures.'/settings/.cache')
         );
 

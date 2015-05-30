@@ -15,11 +15,12 @@ class Config implements Module
 
     /**
      * @param  \GibbonCms\Gibbon\Filesystems\Filesystem $filesystem
+     * @param  string $directory
      * @param  \GibbonCms\Gibbon\Filesystems\FileCache $fileCache
      */
-    public function __construct(Filesystem $filesystem, FileCache $fileCache)
+    public function __construct(Filesystem $filesystem, $directory, FileCache $fileCache)
     {
-        $this->repository = new ConfigRepository($filesystem, $fileCache);
+        $this->repository = new ConfigRepository($filesystem, $directory, $fileCache);
     }
 
     /**

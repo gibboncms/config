@@ -25,12 +25,21 @@ class ConfigRepository implements Repository
     protected $cache;
 
     /**
+     * The yaml parser
+     * 
+     * @var \Symfony\Component\Yaml\Yaml
+     */
+    protected $yaml;
+
+    /**
      * @param  \GibbonCms\Gibbon\Filesystems\Filesystem $filesystem
+     * @param  string $directory
      * @param  \GibbonCms\Gibbon\Filesystems\Cache $cache
      */
-    public function __construct(Filesystem $filesystem, Cache $cache)
+    public function __construct(Filesystem $filesystem, $directory, Cache $cache)
     {
         $this->filesystem = $filesystem;
+        $this->directory = $directory;
 
         $this->cache = $cache;
         $this->cache->rebuild();
@@ -80,7 +89,7 @@ class ConfigRepository implements Repository
      */
     public function build()
     {
-        $files = $this->filesystem->listFiles();
+        $files = $this->filesystem->listFiles($this->directory);
 
         $this->cache->clear();
 

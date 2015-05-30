@@ -22,6 +22,7 @@
         }
     },
     "require": {
+        "php": ">=5.5",
         "gibboncms/gibbon": "~0.1",
         "illuminate/support": "^5.0"
     }

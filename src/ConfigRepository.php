@@ -41,7 +41,7 @@ class ConfigRepository implements Repository
     /**
      * The yaml parser
      * 
-     * @var \Symfony\Component\Yaml\Yaml
+     * @var \Symfony\Component\Yaml\Parser
      */
     protected $yaml;
 

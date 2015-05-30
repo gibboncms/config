@@ -18,11 +18,25 @@ class ConfigRepository implements Repository
     protected $filesystem;
 
     /**
+     * The directory in the filesystem where the config files are located
+     * 
+     * @var string
+     */
+    protected $directory;
+
+    /**
      * We're using a cache because file io is slow
      * 
      * @var \GibbonCms\Gibbon\Filesystems\Cache
      */
     protected $cache;
+
+    /**
+     * In memory version of all the values
+     * 
+     * @var $array
+     */
+    protected $values;
 
     /**
      * The yaml parser
@@ -44,6 +58,8 @@ class ConfigRepository implements Repository
         $this->cache = $cache;
         $this->cache->rebuild();
 
+        $this->updateValues();
+
         $this->yaml = new Yaml;
     }
 
@@ -55,7 +71,7 @@ class ConfigRepository implements Repository
      */
     public function find($key = null)
     {
-        return Arr::get($this->cache->all(), $key);
+        return Arr::get($this->values, $key);
     }
 
     /**
@@ -79,7 +95,7 @@ class ConfigRepository implements Repository
      */
     public function set($key, $value)
     {
-        return Arr::set($this->cache->all(), $key, $value);
+        return Arr::set($this->values, $key, $value);
     }
 
     /**
@@ -100,5 +116,16 @@ class ConfigRepository implements Repository
         }
 
         $this->cache->persist();
+        $this->updateValues();
+    }
+
+    /**
+     * Update the in memory values
+     * 
+     * @return void
+     */
+    protected function updateValues()
+    {
+        $this->values = $this->cache->all();
     }
 }
